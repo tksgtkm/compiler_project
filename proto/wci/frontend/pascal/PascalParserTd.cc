@@ -16,7 +16,7 @@ namespace wci {
         int last_line_number;
         Token *token = nullptr;
 
-        while ((tilen = next_token(token)) != nullptr) {
+        while ((token = next_token(token)) != nullptr) {
           last_line_number = token->get_line_number();
         }
 

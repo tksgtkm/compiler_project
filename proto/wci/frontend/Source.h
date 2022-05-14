@@ -48,6 +48,10 @@ namespace wci {
 
       }
 
+      void add_message_listener(MessageListener *listener) {
+        message_handler.add_listener(listener);
+      }
+
       void send_message(Message& message) const {
         message_handler.send_message(message);
       }

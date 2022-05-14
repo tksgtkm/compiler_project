@@ -15,14 +15,27 @@ namespace wci {
 
     class Parser : MessageProducer {
     public:
+      /*
+      Constructor
+      @param scanner the scanner to be used with this parser.
+      */
       Parser(Scanner *scanner) : scanner(scanner), symtab(nullptr), icode(nullptr) {}
 
+      // Destructor
       virtual ~Parser() {}
 
+      /*
+      Getter
+      @return the scanner used by this parser
+      */
       Scanner *get_scanner() const {
         return scanner;
       }
 
+      /*
+      Getter
+      @return
+      */
       SymTab *get_symtab() const {
         return symtab;
       }
@@ -33,6 +46,10 @@ namespace wci {
 
       MessageHandler& get_message_handler() const {
         return message_handler;
+      }
+
+      Token *current_token() {
+        return scanner->current_token();
       }
 
       Token *next_token(Token *prev_token) throw (std::string) {

@@ -24,5 +24,3 @@ namespace wci {
     }
   } // backend
 } // wci
-
-#endif

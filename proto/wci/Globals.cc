@@ -9,13 +9,13 @@ bool Options::xref         = false;
 
 std::string to_upper(const std::string str) {
   std::string upper_case(str);
-  std::transform(upper_case.begin(), upper_case.end(), upper_case.begin(), std::toupper);
+  std::transform(upper_case.begin(), upper_case.end(), upper_case.begin(), ::toupper);
   return upper_case;
 }
 
 std::string to_lower(const std::string str) {
   std::string lower_case(str);
-  std::transform(lower_case.begin(), lower_case.end(), lower_case.begin(), std::tolower);
+  std::transform(lower_case.begin(), lower_case.end(), lower_case.begin(), ::tolower);
   return lower_case;
 }
 
