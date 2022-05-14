@@ -30,7 +30,7 @@ namespace wci {
       char peek_char() throw (std::string);
 
       bool at_eol() throw (std::string) {
-        return current_pos == line_text.length()
+        return current_pos == line_text.length();
       }
 
       bool at_eof() throw (std::string) {

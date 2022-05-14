@@ -10,8 +10,8 @@
 
 namespace wci {
   namespace frontend {
-    namespace wci::intermediate;
-    namespace wci::message;
+    using namespace wci::intermediate;
+    using namespace wci::message;
 
     class Parser : MessageProducer {
     public:

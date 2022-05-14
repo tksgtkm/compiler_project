@@ -7,7 +7,7 @@
 #include <typeinfo>
 #include <boost/any.hpp>
 
-#define Object boost:any
+#define Object boost::any
 #define instanceof(v, t) (v.type() == typeid(t))
 #define cast(v, t) boost::any_cast<t>(v)
 

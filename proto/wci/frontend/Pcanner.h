@@ -45,6 +45,10 @@ namespace wci {
       }
 
     protected:
+      Source *source;
+      virtual Token *extract_token() throw (std::string) = 0;
+
+    private:
       Token *token;
     };
   } // namespace frontend

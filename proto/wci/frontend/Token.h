@@ -16,7 +16,8 @@ namespace wci {
 
     class Token {
     public:
-      Token(Source *source) throw (std::string) : type((TokenType) 0), text(""), source(source), line_number(source->get_line_number()), position(source->get_position()) {
+      Token(Source *source) throw (std::string) : type((TokenType) 0), text(""), source(source),
+            line_number(source->get_line_number()), position(source->get_position()) {
         value.clear();
         extract();
       }
@@ -62,3 +63,5 @@ namespace wci {
     };
   } // namespace frontend
 } // wci
+
+#endif
