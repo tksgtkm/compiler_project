@@ -6,7 +6,7 @@ SRCS = Pascal.cc \
 			 wci/backend/interpreter/Executor.cc \
 			 wci/frontend/Parser.cc \
 			 wci/frontend/Source.cc \
-			 wci/frontend/pascal/PascalParser_td.cc \
+			 wci/frontend/pascal/PascalParserTd.cc \
 			 wci/frontend/pascal/PascalScanner.cc \
 			 wci/message/MessageHandler.cc
 

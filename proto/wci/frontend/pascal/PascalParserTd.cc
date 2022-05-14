@@ -12,7 +12,7 @@ namespace wci {
       using namespace wci::message;
 
       void PascalParserTD::parse() throw (std::string) {
-        std::steady_clock::time_point start_time = std::steady_clock::now();
+        std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
         int last_line_number;
         Token *token = nullptr;
 
@@ -20,8 +20,8 @@ namespace wci {
           last_line_number = token->get_line_number();
         }
 
-        std::steady_clock::time_point end_time = std::steady_clock::now();
-        double elapsed_time = std::duration_cast<std::duration<double>>(end_time - start_time).count();
+        std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock::now();
+        double elapsed_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_time - start_time).count();
         Message message(PARSER_SUMMARY);
         message.content.parser_summary.line_count = last_line_number;
         message.content.parser_summary.error_count = get_error_count();

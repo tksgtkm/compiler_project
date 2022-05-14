@@ -35,7 +35,7 @@ namespace wci {
     }
 
     char Source::next_char() throw (std::string) {
-      **current_pos;
+      ++current_pos;
       return current_char();
     }
 
@@ -61,7 +61,7 @@ namespace wci {
       }
 
       current_pos = -1;
-      **line_number;
+      ++line_number;
 
       if (!reader.eof() || (line_length > 0)) {
         SOURCE_LINE_MESSAGE.content.source_line.line_number = line_number;
