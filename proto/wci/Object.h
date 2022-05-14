@@ -11,7 +11,7 @@
 #define instanceof(v, t) (v.type() == typeid(t))
 #define cast(v, t) boost::any_cast<t>(v)
 
-std::string stringify(const Object &obj);
+std::string stringify(const Object& obj);
 std::string to_upper(const std::string str);
 std::string to_lower(const std::string str);
 
@@ -23,7 +23,7 @@ public:
 template<class E>
 struct enumhash {
 public:
-  size_t operator() (const E& e) const {
+  size_t operator() (const E &e) const {
     return std::hash<int>()(static_cast<int>(e));
   }
 };

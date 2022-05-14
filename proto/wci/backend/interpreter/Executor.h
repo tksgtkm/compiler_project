@@ -1,7 +1,7 @@
 #ifndef __EXECUTER_H
 #define __EXECUTER_H
 
-#include "../backend.h"
+#include "../Backend.h"
 
 namespace wci {
   namespace backend {
@@ -10,7 +10,7 @@ namespace wci {
 
       class Executor : public Backend {
       public:
-        void process(ICode :icode, SymTab *symtab) throe (std::string);
+        void process(ICode *icode, SymTab *symtab) throw (std::string);
       };
     } // interpreter
   } // backend

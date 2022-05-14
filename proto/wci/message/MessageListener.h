@@ -1,7 +1,7 @@
 #ifndef __MESSAGE_LISTENER_H
 #define __MESSAGE_LISTENER_H
 
-#include "message.h"
+#include "Message.h"
 
 namespace wci {
   namespace message {
@@ -9,7 +9,7 @@ namespace wci {
     public:
       virtual ~MessageListener() {}
 
-      virtual void message_received(Message &message) = 0;
+      virtual void message_received(Message& message) = 0;
     };
   }
 }

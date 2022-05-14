@@ -1,6 +1,6 @@
 #include <iostream>
-#include "pascal_scanner.h"
-#include "../source.h"
+#include "PascalScanner.h"
+#include "../Source.h"
 
 namespace wci {
   namespace frontend {

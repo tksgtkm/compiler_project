@@ -1,8 +1,8 @@
 #ifndef __SCANNER_H
 #define __SCANNER_H
 
-#include "source.h"
-#include "token.h"
+#include "Source.h"
+#include "Token.h"
 
 namespace wci {
   namespace frontend {

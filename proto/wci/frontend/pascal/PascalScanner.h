@@ -1,9 +1,9 @@
 #ifndef __PASCAL_PARSER_H
 #define __PASCAL_PARSER_H
 
-#include "../scanner.h"
-#include "../source.h"
-#include "../token.h"
+#include "../Scanner.h"
+#include "../Source.h"
+#include "../Token.h"
 
 namespace wci {
   namespace frontend {

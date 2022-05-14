@@ -1,8 +1,8 @@
 #ifndef __PASCAL_PARSER_TD_H
 #define __PASCAL_PARSER_TD_H
 
-#include "../parser.h"
-#include "../scanner.h"
+#include "../Parser.h"
+#include "../Scanner.h"
 
 namespace wci {
   namespace frontend {

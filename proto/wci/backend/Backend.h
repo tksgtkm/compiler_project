@@ -1,10 +1,10 @@
 #ifndef __BACKEND_H
 #define __BACKEND_H
 
-#include "../message/message_producer.h"
-#include "../message/message_handler.h"
-#include "../intermediate/symtab.h"
-#include "../intermediate/icode.h"
+#include "../message/MessageProducer.h"
+#include "../message/MessageHandler.h"
+#include "../intermediate/Symtab.h"
+#include "../intermediate/Icode.h"
 
 namespace wci {
   namespace backend {

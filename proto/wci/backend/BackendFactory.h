@@ -2,15 +2,15 @@
 #define __BACKEND_FACTORY_H
 
 #include <string>
-#include "backend.h"
-#include "compiler/code_generator.h"
-#include "interpreter/executor.h"
-#include "../object.h"
+#include "Backend.h"
+#include "compiler/CodeGenerator.h"
+#include "interpreter/Executor.h"
+#include "../Object.h"
 
 namespace wci {
   namespace backend {
     using namespace wci::backend::compiler;
-    using namespace wci::beckend::interpreter;
+    using namespace wci::backend::interpreter;
 
     class BackendFactory {
     public:

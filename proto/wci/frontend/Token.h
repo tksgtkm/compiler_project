@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "source.h"
-#include "../object.h"
+#include "Source.h"
+#include "../Object.h"
 
 namespace wci {
   namespace frontend {
@@ -30,7 +30,7 @@ namespace wci {
 
       std::string get_text() const {return text;}
 
-      Object get_value() {return vlalue;}
+      Object get_value() {return value;}
 
       int get_line_number() const {return line_number;}
 

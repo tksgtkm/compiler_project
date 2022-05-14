@@ -5,9 +5,9 @@
 #include <fstream>
 #include <string>
 
-#include "../message/message_handler.h"
-#include "../message/message_producer.h"
-#include "../message/message_listener.h"
+#include "../message/MessageHandler.h"
+#include "../message/MessageProducer.h"
+#include "../message/MessageListener.h"
 
 namespace wci {
   namespace frontend {
@@ -17,7 +17,7 @@ namespace wci {
     class Source : public MessageProducer {
     public:
 
-      Source(std::istream& reader) : reader(reader), line_number(0), current_pos(-2) {}
+      Source(std::istream &reader) : reader(reader), line_number(0), current_pos(-2) {}
 
       int get_line_number() const {return line_number;}
 

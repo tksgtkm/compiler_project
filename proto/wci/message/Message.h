@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 
-#include "../object.h"
+#include "../Object.h"
 
 namespace wci {
   namespace message {

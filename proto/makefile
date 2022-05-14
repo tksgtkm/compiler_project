@@ -1,14 +1,14 @@
 COMPILER = proto
-SRCS = pascal.cc \
-       wci/globals.cc \
-			 wci/backend/backend.cc \
-			 wci/backend/compiler/code_generator.cc \
-			 wci/backend/interpreter/executor.cc \
-			 wci/frontend/parser.cc \
-			 wci/frontend/source.cc \
-			 wci/frontend/pascal/pascal_parser_td.cc \
-			 wci/frontend/pascal/pascal_scanner.cc \
-			 wci/message/message_handler.cc
+SRCS = Pascal.cc \
+       wci/Globals.cc \
+			 wci/backend/Backend.cc \
+			 wci/backend/compiler/CodeGenerator.cc \
+			 wci/backend/interpreter/Executor.cc \
+			 wci/frontend/Parser.cc \
+			 wci/frontend/Source.cc \
+			 wci/frontend/pascal/PascalParser_td.cc \
+			 wci/frontend/pascal/PascalScanner.cc \
+			 wci/message/MessageHandler.cc
 
 BOOST_INCLUDER_DIR = /usr/local/include/boost
 

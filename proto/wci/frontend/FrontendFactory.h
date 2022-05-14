@@ -2,11 +2,11 @@
 #define __FRONTEND_FACTORY_H
 
 #include <string>
-#include "parser.h"
-#include "scanner.h"
-#include "source.h"
-#include "pascal/pascal_parser_td.h"
-#include "pascal/pascal_scanner.h"
+#include "Parser.h"
+#include "Scanner.h"
+#include "Source.h"
+#include "pascal/PascalParserTd.h"
+#include "pascal/PascalScanner.h"
 
 namespace wci {
   namespace frontend {

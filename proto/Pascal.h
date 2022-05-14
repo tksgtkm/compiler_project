@@ -5,15 +5,15 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "wci/object.h"
-#include "wci/frontend/parser.h"
-#include "wci/frontend/scanner.h"
-#include "wci/frontend/source.h"
-#include "wci/intermediate/symtab.h"
-#include "wci/intermediate/icode.h"
-#include "wci/backend/backend.h"
-#include "wci/message/message.h"
-#include "wci/message/message_listener.h"
+#include "wci/Object.h"
+#include "wci/frontend/Parser.h"
+#include "wci/frontend/Scanner.h"
+#include "wci/frontend/Source.h"
+#include "wci/intermediate/Symtab.h"
+#include "wci/intermediate/Icode.h"
+#include "wci/backend/Backend.h"
+#include "wci/message/Message.h"
+#include "wci/message/MessageListener.h"
 
 using namespace wci::frontend;
 using namespace wci::intermediate;

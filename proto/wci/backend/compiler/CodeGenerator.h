@@ -1,7 +1,7 @@
 #ifndef __CODE_GENERATOR_H
 #define __CODE_GENERATOR_H
 
-#include "../backend.h"
+#include "../Backend.h"
 
 namespace wci {
   namespace backend {

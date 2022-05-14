@@ -2,10 +2,10 @@
 #include <fstream>
 #include <string>
 
-#include "source.h"
-#include "../message/message.h"
-#include "../message/message_handler.h"
-#include "../message/message_listener.h"
+#include "Source.h"
+#include "../message/Message.h"
+#include "../message/MessageHandler.h"
+#include "../message/MessageListener.h"
 
 namespace wci {
   namespace frontend {

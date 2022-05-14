@@ -1,9 +1,9 @@
 #include <chrono>
-#include "pascal_parser_td.h"
+#include "PascalParserTd.h"
 
-#include "../scanner.h"
-#include "../source.h"
-#include "../../message/message.h"
+#include "../Scanner.h"
+#include "../Source.h"
+#include "../../message/Message.h"
 
 namespace wci {
   namespace frontend {

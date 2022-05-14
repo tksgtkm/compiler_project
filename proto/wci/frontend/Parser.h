@@ -1,12 +1,12 @@
 #ifndef __PARSER_H
 #define __PARSER_H
 
-#include "scanner.h"
-#include "../intermediate/symtab.h"
-#include "../intermediate/icode.h"
-#include "../message/message.h"
-#include "../message/message_handler.h"
-#include "../message/message_producer.h"
+#include "Scanner.h"
+#include "../intermediate/Symtab.h"
+#include "../intermediate/Icode.h"
+#include "../message/Message.h"
+#include "../message/MessageHandler.h"
+#include "../message/MessageProducer.h"
 
 namespace wci {
   namespace frontend {

@@ -1,7 +1,7 @@
 #include <chrono>
-#include "code_generator.h"
-#include "../backend.h"
-#include "../../message/message.h"
+#include "CodeGenerator.h"
+#include "../Backend.h"
+#include "../../message/Message.h"
 
 namespace wci {
   namespace backend {
