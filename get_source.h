@@ -17,14 +17,15 @@ typedef enum keys {
   While, Do,
   Ret, Func,
   Var, Const, Odd,
-  Write, Writeln,
+  Write, WriteLn,
   end_of_KeyWd,
   // 予約語の名前はここまで
   // 演算子と区切り記号の名前
   Plus, Minus,
   Mult, Div,
   Lparen, Rparen,
-  Equal, Lss, GtrEq,
+  Equal, Lss, Gtr,
+  NotEq, LssEq, GtrEq,
   Comma, Period, Semicolon,
   Assign,
   end_of_KeySym,
@@ -32,8 +33,8 @@ typedef enum keys {
   // トークンの種類
   Id, Num, nul,
   end_of_Token,
-  letter, digit, colon, others
   // 上記以外の文字の種類
+  letter, digit, colon, others
 } KeyId;
 
 // トークンの型
