@@ -391,7 +391,7 @@ static void printSpaces() {
 }
 
 // 次のトークンの印字
-void printToken() {
+void printcToken() {
   int i = (int)cToken.kind;
   if (printed) {
     printed = 0;

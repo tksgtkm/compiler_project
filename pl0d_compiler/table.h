@@ -1,8 +1,8 @@
 
 // Identiferの種類
 typedef enum kindT {
-  varId, funcId, parId, constId
-} KindT;
+	varId, funcId, parId, constId
+}KindT;
 
 // 変数、パラメタ、関数のアドレスの型
 typedef struct relAddr {
