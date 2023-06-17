@@ -182,7 +182,49 @@ void execute() {
         // 現在のtopがcalleeのブロックの先頭番地
         pc = i.u.addr.addr;
         break;
-      
-    } while (pc != 0);
-  }
+      // スタックのトップにあるものが返す値
+      case ret:
+        // スタックのトップにあるものが返す値
+        temp = stack[--top];
+        // topを呼ばれたときの値に戻す
+        top = display[i.u.addr.level];
+        // 壊したディスプレイの回復
+        display[i.u.addr.level] = stack[top];
+        pc = stack[top + 1];
+        // 実引数の分だけトップを戻す
+        top -= i.u.addr.addr;
+        // 返す値をスタックのトップへ
+        stack[top++] = temp;
+        break;
+      case ict:
+        top += i.u.value;
+        if (top >= MAXMEM - MAXREG)
+          errorF("stack overflow");
+        break;
+      case jmp:
+        pc = i.u.value;
+        break;
+      case jpc:
+        if (stack[--top] == 0)
+          pc = i.u.value;
+        break;
+      case opr:
+        switch(i.u.optr) {
+          case neg: stack[top-1] = -stack[top-1]; continue;
+			    case add: --top;  stack[top-1] += stack[top]; continue;
+			    case sub: --top; stack[top-1] -= stack[top]; continue;
+			    case mul: --top;  stack[top-1] *= stack[top];  continue;
+			    case div: --top;  stack[top-1] /= stack[top]; continue;
+			    case odd: stack[top-1] = stack[top-1] & 1; continue;
+			    case eq: --top;  stack[top-1] = (stack[top-1] == stack[top]); continue;
+			    case ls: --top;  stack[top-1] = (stack[top-1] < stack[top]); continue;
+			    case gr: --top;  stack[top-1] = (stack[top-1] > stack[top]); continue;
+			    case neq: --top;  stack[top-1] = (stack[top-1] != stack[top]); continue;
+			    case lseq: --top;  stack[top-1] = (stack[top-1] <= stack[top]); continue;
+			    case greq: --top;  stack[top-1] = (stack[top-1] >= stack[top]); continue;
+			    case wrt: printf("%d ", stack[--top]); continue;
+			    case wrl: printf("\n"); continue;
+        }
+    } 
+  } while (pc != 0);
 }
