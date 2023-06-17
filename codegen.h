@@ -14,13 +14,13 @@ typedef enum ops {
 int genCodeV(OpCode op, int v);
 
 // 命令後の生成、アドレスは名前表から
-int getCodeT(OpCode op, int ti);
+int genCodeT(OpCode op, int ti);
 
 // 命令後の生成、アドレス部に演算命令
-int getCodeO(Operator p);
+int genCodeO(Operator p);
 
 // ret命令語の生成
-int getCodeR();
+int genCodeR();
 
 // 命令語のバックパッチ(次の番地を)
 void backPatch(int i);

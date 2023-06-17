@@ -41,7 +41,7 @@ int nextCode() {
 }
 
 // 命令語の生成、アドレス部に
-int getCodeV(OpCode op, int v) {
+int genCodeV(OpCode op, int v) {
   checkMax();
   code[cIndex].opCode = op;
   code[cIndex].u.value = v;
@@ -49,7 +49,7 @@ int getCodeV(OpCode op, int v) {
 }
 
 // 命令語の生成、アドレスは名前表から
-int getCodeT(OpCode op, int ti) {
+int genCodeT(OpCode op, int ti) {
   checkMax();
   code[cIndex].opCode = op;
   code[cIndex].u.addr = relAddr(ti);
@@ -57,7 +57,7 @@ int getCodeT(OpCode op, int ti) {
 }
 
 // 命令後の生成、アドレス部に演算命令
-int getCodeO(Operator p) {
+int genCodeO(Operator p) {
   checkMax();
   code[cIndex].opCode = opr;
   code[cIndex].u.optr = p;
@@ -65,7 +65,7 @@ int getCodeO(Operator p) {
 }
 
 // ret命令語の生成
-int getCodeR() {
+int genCodeR() {
   // 直前がretなら生成せず
   if (code[cIndex].opCode == ret)
     return cIndex;
