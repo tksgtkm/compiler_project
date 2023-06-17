@@ -41,7 +41,7 @@ int nextCode() {
 }
 
 // 命令語の生成、アドレス部に
-int getCodeV(OpCode op, int v) {
+int genCodeV(OpCode op, int v) {
   checkMax();
   code[cIndex].opCode = op;
   code[cIndex].u.value = v;
@@ -49,7 +49,7 @@ int getCodeV(OpCode op, int v) {
 }
 
 // 命令語の生成、アドレスは名前表から
-int getCodeT(OpCode op, int ti) {
+int genCodeT(OpCode op, int ti) {
   checkMax();
   code[cIndex].opCode = op;
   code[cIndex].u.addr = relAddr(ti);
@@ -57,7 +57,7 @@ int getCodeT(OpCode op, int ti) {
 }
 
 // 命令後の生成、アドレス部に演算命令
-int getCodeO(Operator p) {
+int genCodeO(Operator p) {
   checkMax();
   code[cIndex].opCode = opr;
   code[cIndex].u.optr = p;
@@ -65,7 +65,7 @@ int getCodeO(Operator p) {
 }
 
 // ret命令語の生成
-int getCodeR() {
+int genCodeR() {
   // 直前がretなら生成せず
   if (code[cIndex].opCode == ret)
     return cIndex;
@@ -182,7 +182,49 @@ void execute() {
         // 現在のtopがcalleeのブロックの先頭番地
         pc = i.u.addr.addr;
         break;
-      
-    } while (pc != 0);
-  }
+      // スタックのトップにあるものが返す値
+      case ret:
+        // スタックのトップにあるものが返す値
+        temp = stack[--top];
+        // topを呼ばれたときの値に戻す
+        top = display[i.u.addr.level];
+        // 壊したディスプレイの回復
+        display[i.u.addr.level] = stack[top];
+        pc = stack[top + 1];
+        // 実引数の分だけトップを戻す
+        top -= i.u.addr.addr;
+        // 返す値をスタックのトップへ
+        stack[top++] = temp;
+        break;
+      case ict:
+        top += i.u.value;
+        if (top >= MAXMEM - MAXREG)
+          errorF("stack overflow");
+        break;
+      case jmp:
+        pc = i.u.value;
+        break;
+      case jpc:
+        if (stack[--top] == 0)
+          pc = i.u.value;
+        break;
+      case opr:
+        switch(i.u.optr) {
+          case neg: stack[top-1] = -stack[top-1]; continue;
+			    case add: --top;  stack[top-1] += stack[top]; continue;
+			    case sub: --top; stack[top-1] -= stack[top]; continue;
+			    case mul: --top;  stack[top-1] *= stack[top];  continue;
+			    case div: --top;  stack[top-1] /= stack[top]; continue;
+			    case odd: stack[top-1] = stack[top-1] & 1; continue;
+			    case eq: --top;  stack[top-1] = (stack[top-1] == stack[top]); continue;
+			    case ls: --top;  stack[top-1] = (stack[top-1] < stack[top]); continue;
+			    case gr: --top;  stack[top-1] = (stack[top-1] > stack[top]); continue;
+			    case neq: --top;  stack[top-1] = (stack[top-1] != stack[top]); continue;
+			    case lseq: --top;  stack[top-1] = (stack[top-1] <= stack[top]); continue;
+			    case greq: --top;  stack[top-1] = (stack[top-1] >= stack[top]); continue;
+			    case wrt: printf("%d ", stack[--top]); continue;
+			    case wrl: printf("\n"); continue;
+        }
+    } 
+  } while (pc != 0);
 }
