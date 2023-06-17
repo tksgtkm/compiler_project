@@ -1,6 +1,6 @@
 #include "get_source.h"
-#ifndef __TABLE_H
-#define __TABLE_H
+#ifndef __TBL_H
+#define __TBL_H
 #include "table.h"
 #endif
 #include "codegen.h"
@@ -33,7 +33,7 @@ static void factor();
 // 条件式のコンパイル
 static void condition();
 // トークンtは文の先頭のキーか？
-static int isStBeingKey(Token t);
+static int isStBeginKey(Token t);
 
 int compile() {
   int i;
@@ -58,7 +58,7 @@ int compile() {
 void block(int pIndex) {
   int backP;
   // 内部関数を飛び越す命令、あとでバックパッチ
-  backP = getCodeV(jmp, 0);
+  backP = genCodeV(jmp, 0);
   // 宣言部を飛び越す命令
   while (1) {
     switch(token.kind) {
@@ -87,7 +87,7 @@ void block(int pIndex) {
   // この関数の開始番地を修正
   changeV(pIndex, nextCode());
   // このブロックの実行時の必要記憶域をとる命令
-  getCodeV(ict,frameL());
+  genCodeV(ict,frameL());
   // このブロックの主文
   statement();
   // リターン命令
@@ -241,7 +241,7 @@ void statement() {
         // "then"のはず
         token = checkGet(token, Then);
         // jpc命令
-        backP = getCodeV(jpc, 0);
+        backP = genCodeV(jpc, 0);
         // 文のコンパイル
         statement();
         // 上のjpc命令にバックパッチ
@@ -253,7 +253,7 @@ void statement() {
         // 式のコンパイル
         expression();
         // ret命令
-        getCodeR();
+        genCodeR();
         return;
       // begin ... end 文のコンパイル
       case Begin:
@@ -273,7 +273,7 @@ void statement() {
               return;
             }
             // 次が分の先頭記号なら
-            if (isStBeingKey(token)) {
+            if (isStBeginKey(token)) {
               errorInsert(Semicolon);
               break;
             }
@@ -396,7 +396,7 @@ void factor() {
         break;
       // 定数名
       case constId:
-        getCodeV(lit, val(tIndex));
+        genCodeV(lit, val(tIndex));
         token = nextToken();
         break;
       // 関数呼び出し
@@ -434,7 +434,7 @@ void factor() {
     }
   // 定数
   } else if (token.kind == Num) {
-    getCodeV(lit, token.u.value);
+    genCodeV(lit, token.u.value);
     token = nextToken();
   // 「(」「因子」「)」
   } else if (token.kind == Lparen) {

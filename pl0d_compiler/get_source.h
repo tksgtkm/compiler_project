@@ -1,7 +1,10 @@
+
+
+#include <stdio.h>
+
 #ifndef __TBL_H
 #define __TBL_H
 
-#include <stdio.h>
 #include "table.h"
 
 #endif
@@ -88,3 +91,4 @@ int errorN();
 
 // 現トークン(Id)の種類をセット(.texファイル出力のため)
 void setIdKind(KindT k);
+
