@@ -1,0 +1,3 @@
+pl0d_compiler/*.o
+pl0d_compiler/pl0d
+pl0d_compiler/*.html
