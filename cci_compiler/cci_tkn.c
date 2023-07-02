@@ -1,4 +1,5 @@
 #include "cci.h"
+#include "cci_prot.h"
 
 // 字句と種別の対応を管理
 typedef struct {
@@ -96,7 +97,7 @@ Token nextTkn() {
   while (isspace(ch)) {
     ch = nextCh();
   }
-
+  return tkn;
 }
 
 // 次の一文字
@@ -152,4 +153,49 @@ int nextCh() {
     ungetc(c2, fin);
   }
   return c;
+}
+
+// 2文字演算子なら真
+int is_ope2(int c1, int c2) {
+  char s[] = "    ";
+  s[1] = c1;
+  s[2] = c2;
+  return strstr(" ++ -- <= >= == != && || ", s) != NULL;
+}
+
+// トークン種別設定
+Token set_kind(Token tk) {
+  int i, ch = tk.text[0];
+
+  tk.kind = Others;
+  for (i = 0; KeyWdTbl[i].keyKind != END_KeyList; i++) {
+    if (strcmp(tk.text, KeyWdTbl[i].keyName) == 0) {
+      tk.kind = KeyWdTbl[i].keyKind;
+      return tk;
+    }
+  }
+  
+  if (ctyp[ch] == Digit)
+    tk.kind = Ident;
+  else if (ctyp[ch] == Digit)
+    tk.kind = IntNum;
+  
+  return tk;
+}
+
+// tk.kind==kdなら次のトークンを返す。異なるときはそのままtkを返す
+Token chk_nextTkn(Token tk, TknKind kd) {
+  char ss[100];
+  if (tk.kind == kd) {
+    return nextTkn();
+  } else {
+    sprintf(ss, "%s の前に %c がありません。", tk.text, kd);
+    err_s(ss);
+    return tk;
+  }
+}
+
+// 読み込み中の行番号
+int get_lineNo() {
+  return srcLineco;
 }
