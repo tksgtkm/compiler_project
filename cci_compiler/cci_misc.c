@@ -1,4 +1,5 @@
 #include "cci.h"
+#include "cci_prot.h"
 
 // 許容最大エラー個数
 #define MAX_ERR 10
@@ -38,10 +39,55 @@ int get_kanji_mode() {
   return ret;
 }
 
+// 文字列確保
+char *s_malloc(char *s) {
+  char *p = (char *)malloc(strlen(s) + 1);
+  if (p == NULL) {
+    fprintf(stderr, "out of memory(malloc)\n");
+    exit(1);
+  } else {
+    strcpy(p, s);
+    return p;
+  }
+}
+
+// 確認付きで*varを1増加
+void incVar(int *var, int size, char *errmsg) {
+  if (*var >= size)
+    err_fi(errmsg, size);
+  else
+    ++(*var);
+}
+
+void err_s(char *s) {
+  err_ss(s, "");
+}
+
+void err_fi(char *fmt, int idt) {
+  char ss[100];
+  sprintf(ss, fmt, idt);
+  err_ss(ss, "");
+}
+
 // エラー表示
 void err_ss(char *s1, char *s2) {
   extern int err_ct;
   static int olderr_lineno = -1;
 
-  if (olderr_lineno == get_lineno());
+  if (olderr_lineno == get_lineno())
+    return;
+
+  if (err_ct++ > MAX_ERR) {
+    fprintf(stderr, "エラー個数が %dを超えました\n", MAX_ERR);
+    exit(1);
+  }
+
+  fprintf(stderr, "#%d error: ", get_lineno());
+
+  if (*s2 == '\0')
+    fprintf(stderr, "%s\n", s1);
+  else
+    fprintf(stderr, "%s(%s)\n", s1, s2);
+
+  olderr_lineno = get_lineno();
 }

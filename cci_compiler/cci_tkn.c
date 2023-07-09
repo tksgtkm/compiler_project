@@ -97,7 +97,91 @@ Token nextTkn() {
   while (isspace(ch)) {
     ch = nextCh();
   }
-  return tkn;
+  // EOF
+  if (ch == EOF) {
+    tkn.kind = EofTkn;
+    return tkn;
+  }
+
+  switch (ctyp[ch]) {
+    case Letter:
+      for (; ctyp[ch] == Letter || ctyp[ch] == Digit; ch = nextCh()) {
+        if (p < p_end31) // 識別子は31文字まで有効
+          *p++ = ch;
+      }
+      *p = '\0';
+      break;
+    // 数値定数
+    case Digit:
+      for (num = 0; ctyp[ch] == Digit; ch = nextCh()) {
+        num = num * 10 + (ch - '0');
+      }
+      tkn.kind = IntNum;
+      tkn.intVal = num; // 値格納
+      sprintf(tkn.text, "%d", num); // エラー表示用
+      break;
+    // 文字定数
+    case SngQ:
+      for (ct = 0, ch = nextCh(); ch != EOF && ch != '\'' && ch != '\''; ch = nextCh()) {
+        // \nの処理
+        if (ch == '\\') {
+          if ((ch = nextCh()) == 'n')
+            ch = '\n';
+        }
+        // 文字低数値格納
+        if (++ct == 1)
+          tkn.intVal = ch;
+      }
+      if (ct != 1)
+        errF = TRUE;
+      if (ch == '\'')
+        ch = nextCh();
+      else
+        errF = TRUE;
+      if (errF)
+        err_s("不正な文字定数");
+      // 以降は整数定数として扱う
+      tkn.kind = IntNum;
+      // エラー表示用
+      sprintf(tkn.text, "'%c'", tkn.intVal);
+      break;
+    case DblQ: // 文字列定数
+      p = lite;
+      ch = nextCh();
+      while (ch != EOF && ch != '\n' && ch != '"') {
+        if (errF) {
+          ch = nextCh();
+          continue;
+        }
+        if ((n = is_kanji(ch)) > 0) {
+          while (n--) {
+            if (p < lite_end)
+              P_SET();
+            else
+              errF = TRUE;
+          }
+          continue;
+        }
+        if (ch == '\\') {
+          if ((ch = nextCh()) == 'n')
+            ch = '\n';
+        }
+        if (p < lite_end)
+          P_SET();
+        else
+          errF = TRUE;
+      }
+      *p = '\0';
+      if (errF) {
+        err_s("文字列リテラルが長過ぎる");
+      }
+      if (ch == '"')
+        ch = nextCh();
+      else
+        err_s("文字列リテラルが閉じていない");
+      tkn.kind = String;
+      // tkn.intVal = mallocS(lite);
+  }
 }
 
 // 次の一文字
