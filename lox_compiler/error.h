@@ -1,5 +1,5 @@
 #ifndef ERROR_H
-#define Error_H
+#define ERROR_H
 
 #include <iostream>
 #include <string_view>

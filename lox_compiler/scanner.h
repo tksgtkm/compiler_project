@@ -24,7 +24,7 @@ public:
   std::vector<Token> scanTokens() {
     while (!isAtEnd()) {
       start = current;
-      scanTokens();
+      scanToken();
     }
 
     tokens.emplace_back(END_OF_FILE, "", nullptr, line);
