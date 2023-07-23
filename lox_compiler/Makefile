@@ -11,6 +11,17 @@ DEPS     := $(SRCS:.cc=.d)
 jlox: lox.o
 	@$(COMPILE) $< -o $@
 
+ast_printer: expr.h ast_printer_driver.o
+	@$(COMPILE) ast_printer_driver.o -o $@
+
+
+generate_ast: generate_ast.o
+	@$(COMPILE) $< -o $@
+
+
+expr.h: generate_ast
+	@./generate_ast .
+
 
 .PHONY: clean
 clean:
