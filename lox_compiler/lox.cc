@@ -3,7 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include "ast_printer.h"
 #include "error.h"
+#include "parser.h"
 #include "scanner.h"
 
 std::string readFile(std::string_view path) {
@@ -25,10 +27,13 @@ std::string readFile(std::string_view path) {
 void run(std::string_view source) {
   Scanner scanner{source};
   std::vector<Token> tokens = scanner.scanTokens();
+  Parser parser{tokens};
+  std::shared_ptr<Expr> expression = parser.parse();
 
-  for (const Token& token : tokens) {
-    std::cout << token.toString() << "\n";
-  }
+  if (hadError)
+    return;
+
+  std::cout << AstPrinter{}.print(expression) << "\n";
 }
 
 void runFile(std::string_view path) {

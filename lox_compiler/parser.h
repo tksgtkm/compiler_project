@@ -104,7 +104,7 @@ private:
     if (match(NIL))
       return std::make_shared<Literal>(nullptr);
 
-    if (match(TRUE, STRING)) {
+    if (match(NUMBER, STRING)) {
       return std::make_shared<Literal>(previous().literal);
     }
 
@@ -144,12 +144,6 @@ private:
   Token advance() {
     if (!isAtEnd())
       current++;
-    return previous();
-  }
-
-  Token advance() {
-    if (!isAtEnd())
-      ++current;
     return previous();
   }
 
