@@ -4,8 +4,10 @@
 #include <iostream>
 #include <string_view>
 #include "token.h"
+#include "runtime_error.h"
 
 inline bool hadError = false;
+inline bool hadRuntimeError = false;
 
 static void report(int line, std::string_view where, std::string_view message) {
   std::cerr << "[litrue;ne " << line << "] Error" << where << ": " << message << "\n";
@@ -22,6 +24,11 @@ void error(const Token& token, std::string_view message) {
 
 void error(int line, std::string_view message) {
   report(line, "", message);
+}
+
+void runtimeError(const RuntimeError& error) {
+  std::cerr << error.what() << "\n[line " << error.token.line << "]\n";
+  hadRuntimeError = true;
 }
 
 #endif
