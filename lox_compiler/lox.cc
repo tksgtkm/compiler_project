@@ -7,6 +7,7 @@
 #include "error.h"
 #include "parser.h"
 #include "scanner.h"
+#include "interpreter.h"
 
 std::string readFile(std::string_view path) {
   std::ifstream file{path.data(), std::ios::in | std::ios::binary | std::ios::ate};
@@ -24,6 +25,8 @@ std::string readFile(std::string_view path) {
   return contents;
 }
 
+Interpreter interpreter{};
+
 void run(std::string_view source) {
   Scanner scanner{source};
   std::vector<Token> tokens = scanner.scanTokens();
@@ -33,7 +36,9 @@ void run(std::string_view source) {
   if (hadError)
     return;
 
-  std::cout << AstPrinter{}.print(expression) << "\n";
+  interpreter.interpret(expression);
+
+  // std::cout << AstPrinter{}.print(expression) << "\n";
 }
 
 void runFile(std::string_view path) {

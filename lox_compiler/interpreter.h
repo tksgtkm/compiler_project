@@ -73,6 +73,28 @@ public:
     return {};
   }
 
+  std::any visitGroupingExpr(std::shared_ptr<Grouping> expr) override {
+    return evaluate(expr->expression);
+  }
+
+  std::any visitLiteralExpr(std::shared_ptr<Literal> expr) override {
+    return expr->value;
+  }
+
+  std::any visitUnaryExpr(std::shared_ptr<Unary> expr) override {
+    std::any right = evaluate(expr->right);
+
+    switch (expr->op.type) {
+      case BANG:
+        return !isTruthy(right);
+      case MINUS:
+        checkNumberOperand(expr->op, right);
+        return -std::any_cast<double>(right);
+    }
+
+    return {};
+  }
+
 private:
 
   void checkNumberOperand(const Token& op, const std::any& operand) {

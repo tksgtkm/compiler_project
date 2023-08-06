@@ -31,21 +31,34 @@ clean:
 -include $(DEPS)
 
 
-.PHONY: test-lexing
-test-lexing:
-	@make jlox >/dev/null
-	@echo "testing jlox with test-lexing.lox ..."
-	@./jlox tests/test-lexing.lox | diff -u --color tests/test-lexing.lox.expected -;
+# .PHONY: test-lexing
+# test-lexing:
+# 	@make jlox >/dev/null
+# 	@echo "testing jlox with test-lexing.lox ..."
+# 	@./jlox tests/test-lexing.lox | diff -u --color tests/test-lexing.lox.expected -;
 
 
-.PHONY: test-lexing2
-test-lexing2:
-	@make jlox >/dev/null
-	@echo "testing jlox with test-lexing2.lox ..."
-	@./jlox tests/test-lexing2.lox | diff -u --color tests/test-lexing2.lox.expected -;
+# .PHONY: test-lexing2
+# test-lexing2:
+# 	@make jlox >/dev/null
+# 	@echo "testing jlox with test-lexing2.lox ..."
+# 	@./jlox tests/test-lexing2.lox | diff -u --color tests/test-lexing2.lox.expected -;
 
-	.PHONY: test-parsing
-test-parsing:
+# 	.PHONY: test-parsing
+# test-parsing:
+# 	@make jlox >/dev/null
+# 	@echo "testing jlox with test-parsing.lox ..."
+# 	@./jlox tests/test-parsing.lox | diff -u --color tests/test-parsing.lox.expected -;
+
+.PHONY: test-expressions
+test-expressions:
 	@make jlox >/dev/null
-	@echo "testing jlox with test-parsing.lox ..."
-	@./jlox tests/test-parsing.lox | diff -u --color tests/test-parsing.lox.expected -;
+	@echo "testing jlox with test-expressions.lox ..."
+	@./jlox tests/test-expressions.lox 2>&1 | diff -u --color tests/test-expressions.lox.expected -;
+
+
+.PHONY: test-expressions2
+test-expressions2:
+	@make jlox >/dev/null
+	@echo "testing jlox with test-expressions2.lox ..."
+	@./jlox tests/test-expressions2.lox | diff -u --color tests/test-expressions2.lox.expected -;
