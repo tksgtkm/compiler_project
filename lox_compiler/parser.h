@@ -10,6 +10,7 @@
 #include <vector>
 #include "error.h"
 #include "expr.h"
+#include "stmt.h"
 #include "token.h"
 #include "token_type.h"
 
@@ -24,17 +25,48 @@ class Parser {
 public:
   Parser(const std::vector<Token> &tokens): tokens{tokens} {}
 
-  std::shared_ptr<Expr> parse() {
-    try {
-      return expression();
-    } catch (ParseError error) {
-      return nullptr;
+  std::vector<std::shared_ptr<Stmt>> parse() {
+    std::vector<std::shared_ptr<Stmt>> statements;
+    while (isAtEnd()) {
+      statements.push_back(declaration());
     }
+
+    return statements;
   }
 
 private:
   std::shared_ptr<Expr> expression() {
     return equality();
+  }
+  
+  std::shared_ptr<Stmt> declaration() {
+    try {
+      if (match(VAR))
+        return;
+    }
+  }
+
+  std::shared_ptr<Expr> equality() {
+    std::shared_ptr<Expr> expr = comparison();
+
+    while (match(BANG_EQUAL, EQUAL_EQUAL)) {
+      Token op = previous();
+      std::shared_ptr<Expr> right = comparison();
+      expr = std::make_shared<Binary>(expr, std::move(op), right);
+    }
+
+    return expr;
+  }
+
+  std::shared_ptr<Expr> assignment() {
+    std::shared_ptr<Expr> expr = equality();
+
+    if (match(EQUAL)) {
+      Token equals = previous();
+      std::shared_ptr<Expr> value = assignment();
+
+      if (Variable* e = dynamic_cast<Variable*>(expr.get()));
+    }
   }
 
   std::shared_ptr<Expr> equality() {
