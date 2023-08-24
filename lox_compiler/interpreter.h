@@ -6,16 +6,22 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include "environment.h"
 #include "error.h"
 #include "expr.h"
 #include "runtime_error.h"
+#include "stmt.h"
 
-class Interpreter: public ExprVisitor {
+class Interpreter: public ExprVisitor,public StmtVisitor {
+
+  std::shared_ptr<Environment> environment{new Environment};
+
 public:
-  void interpret(std::shared_ptr<Expr> expression) {
+  void interpret(const std::vector<std::shared_ptr<Stmt>>& statements) {
     try {
-      std::any value = evaluate(expression);
-      std::cout << stringify(value) << "\n";
+      for (const std::shared_ptr<Stmt>& statement : statements) {
+        execute(statement);
+      }
     } catch (RuntimeError error) {
       runtimeError(error);
     }
@@ -24,6 +30,26 @@ public:
 private:
   std::any evaluate(std::shared_ptr<Expr> expr) {
     return expr->accept(*this);
+  }
+
+  void execute(std::shared_ptr<Stmt> stmt) {
+    stmt->accept(*this);
+  }
+
+  void executeBlock(const std::vector<std::shared_ptr<Stmt>>& statements, std::shared_ptr<Environment> environment) {
+    std::shared_ptr<Environment> previous = this->environment;
+    try {
+      this->environment = environment;
+
+      for (const std::shared_ptr<Stmt>& statement : statements) {
+        execute(statement);
+      }
+    } catch (...) {
+      this->environment = previous;
+      throw;
+    }
+
+    this->environment = previous;
   }
 
 public:

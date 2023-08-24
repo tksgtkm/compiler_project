@@ -36,14 +36,35 @@ public:
 
 private:
   std::shared_ptr<Expr> expression() {
-    return equality();
+    return assignment();
   }
   
-  std::shared_ptr<Stmt> declaration() {
-    try {
-      if (match(VAR))
-        return;
-    }
+  // std::shared_ptr<Stmt> declaration() {
+  //   try {
+  //     if (match(VAR))
+  //       return varDeclaration();
+  //   }
+  // }
+
+  std::shared_ptr<Stmt> statement() {
+    if (match(PRINT))
+      return printStatement();
+    if (match(LEFT_BRACE))
+      return std::make_shared<Block>(block());
+
+    return expressionStatement();
+  }
+
+  std::shared_ptr<Stmt> printStatement() {
+    std::shared_ptr<Expr> value = expression();
+    consume(SEMICOLON, "Expect ';' after value.");
+    return std::make_shared<Print>(value);
+  }
+
+  std::shared_ptr<Stmt> expressionStatement() {
+    std::shared_ptr<Expr> expr = expression();
+    consume(SEMICOLON, "Expect ';' after expression.");
+    return std::make_shared<Expression>(expr);
   }
 
   std::shared_ptr<Expr> equality() {
