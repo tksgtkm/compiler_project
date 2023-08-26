@@ -71,4 +71,13 @@ struct Unary: Expr, public std::enable_shared_from_this<Unary> {
   const std::shared_ptr<Expr> right;
 };
 
+struct Variable: Expr, public std::enable_shared_from_this<Variable> {
+  Variable(Token name): name{std::move(name)} {}
+  std::any accept(ExprVisitor& visitor) override {
+    return visitor.visitVariableExpr(shared_from_this());
+  }
+
+  const Token name;
+};
+
 #endif

@@ -39,12 +39,15 @@ private:
     return assignment();
   }
   
-  // std::shared_ptr<Stmt> declaration() {
-  //   try {
-  //     if (match(VAR))
-  //       return varDeclaration();
-  //   }
-  // }
+  std::shared_ptr<Stmt> declaration() {
+    try {
+      if (match(VAR))
+        return varDeclaration();
+    } catch (ParseError error) {
+      synchronize();
+      return nullptr;
+    }
+  }
 
   std::shared_ptr<Stmt> statement() {
     if (match(PRINT))
@@ -61,10 +64,33 @@ private:
     return std::make_shared<Print>(value);
   }
 
+  std::shared_ptr<Stmt> varDeclaration() {
+    Token name = consume(IDENTIFIER, "Expect variable name.");
+
+    std::shared_ptr<Expr> initializer = nullptr;
+    if (match(EQUAL)) {
+      initializer = expression();
+    }
+
+    consume(SEMICOLON, "Expect ';' after variable declaration.");
+    return std::make_shared<Var>(std::move(name), initializer);
+  }
+
   std::shared_ptr<Stmt> expressionStatement() {
     std::shared_ptr<Expr> expr = expression();
     consume(SEMICOLON, "Expect ';' after expression.");
     return std::make_shared<Expression>(expr);
+  }
+
+  std::vector<std::shared_ptr<Stmt>> block() {
+    std::vector<std::shared_ptr<Stmt>> statements;
+
+    while (!check(RIGHT_BRACE) && !isAtEnd()) {
+      statements.push_back(declaration());
+    }
+
+    consume(RIGHT_BRACE, "Expect '}' after block");
+    return statements;
   }
 
   std::shared_ptr<Expr> equality() {
@@ -86,7 +112,9 @@ private:
       Token equals = previous();
       std::shared_ptr<Expr> value = assignment();
 
-      if (Variable* e = dynamic_cast<Variable*>(expr.get()));
+      if (Variable* e = dynamic_cast<Variable*>(expr.get())) {
+        Token name = e->name;
+      }
     }
   }
 
