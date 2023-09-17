@@ -28,6 +28,17 @@ struct Expr {
   virtual std::any accept(ExprVisitor& visitor) = 0;
 };
 
+struct Assign: Expr, public std::enable_shared_from_this<Assign> {
+  Assign(Token name, std::shared_ptr<Expr> value): name{std::move(name)}, value{std::move(value)} {}
+
+  std::any accept(ExprVisitor& visitor) override {
+    return visitor.visitAssignExpr(shared_from_this());
+  }
+
+  const Token name;
+  const std::shared_ptr<Expr> value;
+};
+
 struct Binary: Expr, public std::enable_shared_from_this<Binary> {
   Binary(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right): left{std::move(left)}, op{std::move(op)}, right{std::move(right)} {}
 

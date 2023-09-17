@@ -19,7 +19,7 @@ class Scanner {
   int line = 1;
 
 public:
-  Scanner(std::string_view source): source{source} {}
+  Scanner(std::string_view source): source {source} {}
 
   std::vector<Token> scanTokens() {
     while (!isAtEnd()) {

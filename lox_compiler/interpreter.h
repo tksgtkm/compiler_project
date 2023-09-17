@@ -53,6 +53,38 @@ private:
   }
 
 public:
+
+  std::any visitBlockStmt(std::shared_ptr<Block> stmt) override {
+    executeBlock(stmt->statements, std::make_shared<Environment>(environment));
+    return {};
+  }
+
+  std::any visitExpressionStmt(std::shared_ptr<Expression> stmt) override {
+    evaluate(stmt->expression);
+    return {};
+  }
+
+  std::any visitPrintStmt(std::shared_ptr<Print> stmt) override {
+    std::any value = evaluate(stmt->expression);
+    std::cout << stringify(value) << "\n";
+    return {};
+  }
+
+  std::any visitVarStmt(std::shared_ptr<Var> stmt) override {
+    std::any value = nullptr;
+    if (stmt->initializer != nullptr) {
+      value = evaluate(stmt->initializer);
+    }
+
+    environment->define(stmt->name.lexeme, std::move(value));
+    return {};
+  }
+
+  std::any visitAssignExpr(std::shared_ptr<Assign> expr) override {
+    std::any value = evaluate(expr->value);
+    environment->assign(expr->name, value);
+    return value;
+  }
   
   std::any visitBinaryExpr(std::shared_ptr<Binary> expr) override {
     std::any left = evaluate(expr->left);
@@ -121,6 +153,10 @@ public:
     return {};
   }
 
+  std::any visitVariableExpr(std::shared_ptr<Variable> expr) override {
+    return environment->get(expr->name);
+  }
+
 private:
 
   void checkNumberOperand(const Token& op, const std::any& operand) {
@@ -168,6 +204,8 @@ private:
     if (a.type() == typeid(bool) && b.type() == typeid(bool)) {
       return std::any_cast<bool>(a) == std::any_cast<bool>(b);
     }
+
+    return false;
   }
 
   std::string stringify(const std::any& object) {

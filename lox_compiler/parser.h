@@ -43,6 +43,7 @@ private:
     try {
       if (match(VAR))
         return varDeclaration();
+      return statement();
     } catch (ParseError error) {
       synchronize();
       return nullptr;
@@ -93,18 +94,6 @@ private:
     return statements;
   }
 
-  std::shared_ptr<Expr> equality() {
-    std::shared_ptr<Expr> expr = comparison();
-
-    while (match(BANG_EQUAL, EQUAL_EQUAL)) {
-      Token op = previous();
-      std::shared_ptr<Expr> right = comparison();
-      expr = std::make_shared<Binary>(expr, std::move(op), right);
-    }
-
-    return expr;
-  }
-
   std::shared_ptr<Expr> assignment() {
     std::shared_ptr<Expr> expr = equality();
 
@@ -114,8 +103,13 @@ private:
 
       if (Variable* e = dynamic_cast<Variable*>(expr.get())) {
         Token name = e->name;
+        return std::make_shared<Assign>(std::move(name), value);
       }
+
+      error(std::move(equals), "Invalid assignment target");
     }
+
+    return expr;
   }
 
   std::shared_ptr<Expr> equality() {

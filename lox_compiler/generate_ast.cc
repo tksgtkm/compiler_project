@@ -158,6 +158,10 @@ void defineAst(
             "#include \"token.h\"\n"
             "\n";
 
+  if (baseName == "Stmt")
+    writer << "#include \"expr.h\"\n";
+  writer << "\n";
+
   // Forward declare the AST classes.
   for (std::string_view type : types) {
     std::string_view className = trim(split(type, ": ")[0]);
@@ -168,13 +172,6 @@ void defineAst(
   writer << "\n";
   defineVisitor(writer, baseName, types);
 
-  // The base class.
-  // C++ does not allow virtual methods to be templated. That means
-  // multiple accept signatures are out -- at least if we don't want
-  // to over complicate things. An alternative is to use std::any,
-  // which holds values of any type in a type-safe way. Classes
-  // implementing the base class are then required to cast the return
-  // value to the expected type inside their member functions.
   writer << "\n"
             "struct " << baseName << " {\n"
             "  virtual std::any accept(" << baseName <<
@@ -197,10 +194,19 @@ int main(int argc, char* argv[]) {
   std::string outputDir = argv[1];
 
   defineAst(outputDir, "Expr", {
+    "Assign   : Token name, Expr* value",
     "Binary   : Expr* left, Token op, Expr* right",
     "Grouping : Expr* expression",
     "Literal  : std::any value",
-    "Unary    : Token op, Expr* right"
+    "Unary    : Token op, Expr* right",
+    "Variable : Token name"
+  });
+
+  defineAst(outputDir, "Stmt", {
+    "Block      : std::vector<Stmt*> statements",
+    "Expression : Expr* expression",
+    "Print      : Expr* expression",
+    "Var        : Token name, Expr* initializer"
   });
 }
 

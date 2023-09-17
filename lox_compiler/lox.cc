@@ -31,14 +31,13 @@ void run(std::string_view source) {
   Scanner scanner{source};
   std::vector<Token> tokens = scanner.scanTokens();
   Parser parser{tokens};
-  std::shared_ptr<Expr> expression = parser.parse();
+  std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
   if (hadError)
     return;
 
-  interpreter.interpret(expression);
+  interpreter.interpret(statements);
 
-  // std::cout << AstPrinter{}.print(expression) << "\n";
 }
 
 void runFile(std::string_view path) {
@@ -47,6 +46,8 @@ void runFile(std::string_view path) {
 
   if (hadError)
     std::exit(65);
+  if (hadRuntimeError)
+    std::exit(70);
 }
 
 void runPrompt() {
@@ -55,7 +56,6 @@ void runPrompt() {
     std::string line;
     if (!std::getline(std::cin, line))
       break;
-    run(line);
     hadError = false;  
   }
 }
