@@ -10,7 +10,7 @@ inline bool hadError = false;
 inline bool hadRuntimeError = false;
 
 static void report(int line, std::string_view where, std::string_view message) {
-  std::cerr << "[litrue;ne " << line << "] Error" << where << ": " << message << "\n";
+  std::cerr << "[line " << line << "] Error" << where << ": " << message << "\n";
   hadError = true;
 }
 

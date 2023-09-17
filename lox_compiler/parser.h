@@ -19,15 +19,15 @@ class Parser {
     using std::runtime_error::runtime_error;
   };
 
-  const std::vector<Token> &tokens;
+  const std::vector<Token>& tokens;
   int current = 0;
 
 public:
-  Parser(const std::vector<Token> &tokens): tokens{tokens} {}
+  Parser(const std::vector<Token>& tokens): tokens{tokens} {}
 
   std::vector<std::shared_ptr<Stmt>> parse() {
     std::vector<std::shared_ptr<Stmt>> statements;
-    while (isAtEnd()) {
+    while (!isAtEnd()) {
       statements.push_back(declaration());
     }
 
@@ -139,7 +139,7 @@ private:
   std::shared_ptr<Expr> term() {
     std::shared_ptr<Expr> expr = factor();
 
-    while (match(SLASH, PLUS)) {
+    while (match(MINUS, PLUS)) {
       Token op = previous();
       std::shared_ptr<Expr> right = factor();
       expr = std::make_shared<Binary>(expr, std::move(op), right);
@@ -183,6 +183,10 @@ private:
       return std::make_shared<Literal>(previous().literal);
     }
 
+    if (match(IDENTIFIER)) {
+      return std::make_shared<Variable>(previous());
+    }
+
     if (match(LEFT_PAREN)) {
       std::shared_ptr<Expr> expr = expression();
       consume(RIGHT_PAREN, "Expect ')' after expression." );
@@ -218,7 +222,7 @@ private:
 
   Token advance() {
     if (!isAtEnd())
-      current++;
+      ++current;
     return previous();
   }
 
