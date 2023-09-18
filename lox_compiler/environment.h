@@ -11,6 +11,8 @@
 #include "token.h"
 
 class Environment: public std::enable_shared_from_this<Environment> {
+  friend class Interpreter;
+
   std::shared_ptr<Environment> enclosing;
   std::map<std::string, std::any> values;
 
@@ -48,6 +50,23 @@ public:
 
   void define(const std::string& name, std::any value) {
     values[name] = std::move(value);
+  }
+
+  std::shared_ptr<Environment> ancestor(int distance) {
+    std::shared_ptr<Environment> environment = shared_from_this();
+    for (int i = 0; i < distance; ++i) {
+      environment = environment->enclosing;
+    }
+
+    return environment;
+  }
+
+  std::any getAr(int distance, const std::string& name) {
+    return ancestor(distance)->values[name];
+  }
+
+  void assignAt(int distance, const Token& name, std::any value) {
+    ancestor(distance)->values[name.lexeme] = std::move(value);
   }
 };
 
