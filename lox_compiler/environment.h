@@ -61,7 +61,7 @@ public:
     return environment;
   }
 
-  std::any getAr(int distance, const std::string& name) {
+  std::any getAt(int distance, const std::string& name) {
     return ancestor(distance)->values[name];
   }
 
