@@ -3,11 +3,11 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include "ast_printer.h"
 #include "error.h"
+#include "interpreter.h"
 #include "parser.h"
 #include "scanner.h"
-#include "interpreter.h"
+
 
 std::string readFile(std::string_view path) {
   std::ifstream file{path.data(), std::ios::in | std::ios::binary | std::ios::ate};
@@ -32,6 +32,9 @@ void run(std::string_view source) {
   std::vector<Token> tokens = scanner.scanTokens();
   Parser parser{tokens};
   std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
+
+  if (hadError)
+    return;
 
   if (hadError)
     return;
