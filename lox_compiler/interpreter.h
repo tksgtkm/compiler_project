@@ -148,6 +148,10 @@ public:
     return {};
   }
 
+  std::any visitCallExpr(std::shared_ptr<Call> expr) override {
+    std::any callee = evaluate(expr->callee);
+  } 
+
   std::any visitGroupingExpr(std::shared_ptr<Grouping> expr) override {
     return evaluate(expr->expression);
   }
