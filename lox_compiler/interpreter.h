@@ -9,14 +9,23 @@
 #include "environment.h"
 #include "error.h"
 #include "expr.h"
+#include "lox_callable.h"
 #include "runtime_error.h"
 #include "stmt.h"
 
-class Interpreter: public ExprVisitor,public StmtVisitor {
 
-  std::shared_ptr<Environment> environment{new Environment};
+
+class Interpreter: public ExprVisitor, StmtVisitor{
+  
+public: std::shared_ptr<Environment> globals{new Environment};
+private: std::shared_ptr<Environment> environment = globals;
 
 public:
+
+  Interpreter() {
+    globals->defines("clock", std::shared_ptr<NativeClock>{});
+  }
+  
   void interpret(const std::vector<std::shared_ptr<Stmt>>& statements) {
     try {
       for (const std::shared_ptr<Stmt>& statement : statements) {
@@ -148,8 +157,23 @@ public:
     return {};
   }
 
+  // 関数呼び出し
   std::any visitCallExpr(std::shared_ptr<Call> expr) override {
     std::any callee = evaluate(expr->callee);
+
+    std::vector<std::any> arguments;
+    for (const std::shared_ptr<Expr>& argument : expr->arguments) {
+      arguments.push_back(evaluate(argument));
+    }
+
+    std::shared_ptr<LoxCallable> function;
+
+    if (callee.type() == typeid(std::shared_ptr<LoxFunction>)) {
+      function = std::any_cast<std::shared_ptr<LoxFunction>>(callee);
+    } else {
+      throw RuntimeError{expr->paren, "Can only functions and classes"};
+    }
+    
   } 
 
   std::any visitGroupingExpr(std::shared_ptr<Grouping> expr) override {

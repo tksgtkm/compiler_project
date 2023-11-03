@@ -41,6 +41,8 @@ private:
   
   std::shared_ptr<Stmt> declaration() {
     try {
+      if (match(FUN))
+        return function("function");
       if (match(VAR))
         return varDeclaration();
       return statement();
@@ -152,6 +154,21 @@ private:
     std::shared_ptr<Expr> expr = expression();
     consume(SEMICOLON, "Expect ';' after expression.");
     return std::make_shared<Expression>(expr);
+  }
+
+  std::shared_ptr<Function> function(std::string kind) {
+    Token name = consume(IDENTIFIER, "Expect " + kind + " name. ");
+    consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+    std::vector<Token> parameters;
+    if (!check(RIGHT_PAREN)) {
+      do {
+        if (parameters.size() >= 255) {
+          error(peek(), "Can't have more than 255 parameters.");
+        }
+
+        parameters.push_back(consume(IDENTIFIER, "Expect parameter name"));
+      } while (match(COMMA));
+    }
   }
 
   std::vector<std::shared_ptr<Stmt>> block() {
