@@ -4,7 +4,10 @@
 #include <iostream>
 #include <vector>
 #include "error.h"
+#include "interpreter.h"
+#include "parser.h"
 #include "scanner.h"
+
 
 std::string readFile(std::string_view path) {
   std::ifstream file{path.data(), std::ios::in | std::ios::binary | std::ios::ate};
@@ -22,13 +25,22 @@ std::string readFile(std::string_view path) {
   return contents;
 }
 
+Interpreter interpreter{};
+
 void run(std::string_view source) {
   Scanner scanner{source};
   std::vector<Token> tokens = scanner.scanTokens();
+  Parser parser{tokens};
+  std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
-  for (const Token& token : tokens) {
-    std::cout << token.toString() << "\n";
-  }
+  if (hadError)
+    return;
+
+  if (hadError)
+    return;
+
+  interpreter.interpret(statements);
+
 }
 
 void runFile(std::string_view path) {
@@ -37,6 +49,8 @@ void runFile(std::string_view path) {
 
   if (hadError)
     std::exit(65);
+  if (hadRuntimeError)
+    std::exit(70);
 }
 
 void runPrompt() {
