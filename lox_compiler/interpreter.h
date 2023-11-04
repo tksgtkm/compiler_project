@@ -2,6 +2,7 @@
 #define INTERPRETER_H
 
 #include <any>
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -10,12 +11,30 @@
 #include "error.h"
 #include "expr.h"
 #include "lox_callable.h"
+#include "lox_function.h"
+#include "lox_return.h"
 #include "runtime_error.h"
 #include "stmt.h"
 
+class NativeClock: public LoxCallable {
+public:
+  int arity() override {
+    return 0;
+  }
 
+  std::any call(Interpreter& interpreter, std::vector<std::any> arguments) override {
+    auto ticks = std::chrono::system_clock::now().time_since_epoch();
+    return std::chrono::duration<double>{ticks}.count() / 1000.0;
+  }
+
+  std::string toString() override {
+    return "<native fn>";
+  }
+};
 
 class Interpreter: public ExprVisitor, StmtVisitor{
+
+friend class LoxFunction;
   
 public: std::shared_ptr<Environment> globals{new Environment};
 private: std::shared_ptr<Environment> environment = globals;
@@ -23,7 +42,7 @@ private: std::shared_ptr<Environment> environment = globals;
 public:
 
   Interpreter() {
-    globals->defines("clock", std::shared_ptr<NativeClock>{});
+    globals->define("clock", std::shared_ptr<NativeClock>{});
   }
   
   void interpret(const std::vector<std::shared_ptr<Stmt>>& statements) {
@@ -72,6 +91,12 @@ public:
     evaluate(stmt->expression);
     return {};
   }
+
+  std::any visitFunctionStmt(std::shared_ptr<Function> stmt) override {
+    auto function = std::make_shared<LoxFunction>(stmt, environment);
+    environment->define(stmt->name.lexeme, function);
+    return {};
+  }
   
   std::any visitIfStmt(std::shared_ptr<If> stmt) override {
     if (isTruthy(evaluate(stmt->condition))) {
@@ -86,6 +111,13 @@ public:
     std::any value = evaluate(stmt->expression);
     std::cout << stringify(value) << "\n";
     return {};
+  }
+
+  std::any visitReturnStmt(std::shared_ptr<Return> stmt) override {
+    std::any value = nullptr;
+    if (stmt->value != nullptr)
+      value = evaluate(stmt->value);
+    throw LoxReturn{value};
   }
 
   std::any visitVarStmt(std::shared_ptr<Var> stmt) override {
@@ -285,6 +317,10 @@ private:
 
     if (object.type() == typeid(bool)) {
       return std::any_cast<bool>(object) ? "true" : "false";
+    }
+
+    if (object.type() == typeid(std::shared_ptr<LoxFunction>)) {
+      return std::any_cast<std::shared_ptr<LoxFunction>>(object)->toString();
     }
 
     return "Error in stringify: object type not recognized.";

@@ -59,6 +59,8 @@ private:
       return ifStatement();
     if (match(PRINT))
       return printStatement();
+    if (match(RETURN))
+      return returnStatement();
     if (match(WHILE))
       return whileStatement();
     if (match(LEFT_BRACE))
@@ -129,6 +131,17 @@ private:
     return std::make_shared<Print>(value);
   }
 
+  std::shared_ptr<Stmt> returnStatement() {
+    Token keyword = previous();
+    std::shared_ptr<Expr> value = nullptr;
+    if (!check(SEMICOLON)) {
+      value = expression();
+    }
+
+    consume(SEMICOLON, "Expect ';' after return value");
+    return std::make_shared<Return>(keyword, value);
+  }
+
   std::shared_ptr<Stmt> varDeclaration() {
     Token name = consume(IDENTIFIER, "Expect variable name.");
 
@@ -169,6 +182,10 @@ private:
         parameters.push_back(consume(IDENTIFIER, "Expect parameter name"));
       } while (match(COMMA));
     }
+    consume(RIGHT_PAREN, "Expect ')' after parameters");
+    consume(LEFT_BRACE, "Expect '{' before " + kind + " body ");
+    std::vector<std::shared_ptr<Stmt>> body = block();
+    return std::make_shared<Function>(std::move(name), std::move(parameters), std::move(body));
   }
 
   std::vector<std::shared_ptr<Stmt>> block() {
